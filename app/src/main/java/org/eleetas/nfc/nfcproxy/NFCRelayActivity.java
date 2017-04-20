@@ -33,6 +33,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.*;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -221,18 +222,23 @@ public class NFCRelayActivity extends Activity {
             } catch (NoSuchMethodException e) {
                 mTagTech = null;
                 log("Unsupported tag type: " + e.toString());
+                updateStatusUI("Unsupported tag type: " + e.toString());
             } catch (IllegalArgumentException e) {
                 mTagTech = null;
                 log("Unsupported tag type: " + e.toString());
+                updateStatusUI("Unsupported tag type: " + e.toString());
             } catch (ClassNotFoundException e) {
                 mTagTech = null;
                 log("Unsupported tag type: " + e.toString());
+                updateStatusUI("Unsupported tag type: " + e.toString());
             } catch (IllegalAccessException e) {
                 mTagTech = null;
                 log("Unsupported tag type: " + e.toString());
+                updateStatusUI("Unsupported tag type: " + e.toString());
             } catch (InvocationTargetException e) {
                 mTagTech = null;
                 log("Unsupported tag type: " + e.toString());
+                updateStatusUI("Unsupported tag type: " + e.toString());
             }
 
             if (mTagTech != null) {
@@ -509,6 +515,21 @@ public class NFCRelayActivity extends Activity {
         if (mDebugLogging) {
             LogHelper.log(this, msg);
         }
+    }
+
+    private void updateStatusUI(final CharSequence msg) {
+        mStatusView.post(new Runnable() {
+            @Override
+            public void run() {
+                mStatusView.append(TextUtils.concat(msg, "\n"));
+                mStatusTab.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatusTab.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
     }
 
     /* (non-Javadoc)

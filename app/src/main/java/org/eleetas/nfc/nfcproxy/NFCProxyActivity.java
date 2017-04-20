@@ -890,6 +890,7 @@ public class NFCProxyActivity extends Activity {
                         meth = cls.getMethod("isConnected", null);
                         boolean connected = (Boolean) meth.invoke(ipcd, null);
                         log("isConnected: " + connected);
+                        updateStatusUI("isConnected: " + connected);
                         if (!connected) {
                             log(getString(R.string.not_connected_to_pcd));
                             updateStatusUI(getString(R.string.not_connected_to_pcd));
@@ -986,9 +987,9 @@ public class NFCProxyActivity extends Activity {
                     } catch (InvocationTargetException e) {
 
                         if (e instanceof InvocationTargetException) {
-                            if (((InvocationTargetException) e).getCause() instanceof TagLostException) {
+                            if ((e).getCause() instanceof TagLostException) {
                                 log(getString(R.string.lost_pcd));
-                                updateStatusUI(getString(R.string.lost_pcd));
+                                updateStatusUI(getString(R.string.lost_pcd) + " " + e.getMessage());
                             }
                         } else {
                             log(e);
