@@ -6,11 +6,15 @@ import java.lang.reflect.Method;
 
 import android.nfc.Tag;
 import android.nfc.tech.TagTechnology;
+import android.util.Log;
 
 
 //TODO: HACK since BasicTagTechnology is not currently visible from SDK. primiarly want the transceive() method (otherwise we could just use TagTechnology) 
 //TODO: Just access BasicTagTechnolgy directly but modifying platform library android.jar. (use library with hidden classes from framework.jar)
 public class BasicTagTechnologyWrapper implements TagTechnology {
+    // TAG for log
+    private static final String TAG = "BasicTagTech";
+
     //	Method get;
     Method transceive;
     Method isConnected;
@@ -19,6 +23,7 @@ public class BasicTagTechnologyWrapper implements TagTechnology {
     Method close;
     Tag mTag;
     Object mTagTech;
+    Log log;
 
     public BasicTagTechnologyWrapper(Tag tag, String tech) throws ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         Class cls = Class.forName(tech);
@@ -37,17 +42,8 @@ public class BasicTagTechnologyWrapper implements TagTechnology {
         Boolean ret = false;
         try {
             ret = (Boolean) isConnected.invoke(mTagTech);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof RuntimeException) {
-                throw (RuntimeException) e.getTargetException();
-            }
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
         return ret;
     }
@@ -56,19 +52,15 @@ public class BasicTagTechnologyWrapper implements TagTechnology {
     public void connect() throws IOException {
         try {
             connect.invoke(mTagTech);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {
                 throw (RuntimeException) e.getTargetException();
             } else if (e.getTargetException() instanceof IOException) {
                 throw (IOException) e.getTargetException();
             }
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -76,36 +68,28 @@ public class BasicTagTechnologyWrapper implements TagTechnology {
     public void close() throws IOException {
         try {
             close.invoke(mTagTech);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {
                 throw (RuntimeException) e.getTargetException();
             } else if (e.getTargetException() instanceof IOException) {
                 throw (IOException) e.getTargetException();
             }
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
     public int getMaxTransceiveLength() {
         try {
             return (Integer) getMaxTransceiveLength.invoke(mTagTech);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {
                 throw (RuntimeException) e.getTargetException();
             }
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return 0;
     }
@@ -113,22 +97,18 @@ public class BasicTagTechnologyWrapper implements TagTechnology {
     public byte[] transceive(byte[] data) throws IOException {
         try {
             return (byte[]) transceive.invoke(mTagTech, data);
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof RuntimeException) {
                 throw (RuntimeException) e.getTargetException();
             } else if (e.getTargetException() instanceof IOException) {
                 throw (IOException) e.getTargetException();
             }
-            e.printStackTrace();
-            System.err.println(e);
-            System.err.println(e.getTargetException());
+            Log.e(TAG, e.getMessage());
         }
+        // this line is called when the return statement fails, which means there is an exception been thrown.
+        // Then throw an additional IOException
         throw new IOException("transceive failed");
     }
 
@@ -136,11 +116,4 @@ public class BasicTagTechnologyWrapper implements TagTechnology {
     public Tag getTag() {
         return mTag;
     }
-/*
-    @Override
-	public void reconnect() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-*/
 }
