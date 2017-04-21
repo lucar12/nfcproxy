@@ -77,7 +77,8 @@ public class NFCRelayActivity extends Activity {
             case R.id.settingsButton:
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                     startActivity(new Intent(this, SettingsActivityCompat.class));
-                } else {
+                }
+                else {
                     startActivity(new Intent(this, SettingsActivity.class));
                 }
                 return true;
@@ -125,7 +126,8 @@ public class NFCRelayActivity extends Activity {
         }
         if (ipAddr.length() == 0) {
             updateUIandScroll(getString(R.string.enable_wifi));
-        } else {
+        }
+        else {
             updateUIandScroll(ipAddr);
         }
     }
@@ -153,7 +155,8 @@ public class NFCRelayActivity extends Activity {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                 prefs.edit().putBoolean("relayPref", true).commit();
                 Toast.makeText(this, getString(R.string.proxy_mode_unsupported), Toast.LENGTH_LONG).show();
-            } else {
+            }
+            else {
                 Intent forwardIntent = new Intent(intent);
                 forwardIntent.setClass(this, NFCProxyActivity.class);
                 startActivity(forwardIntent);
@@ -176,10 +179,12 @@ public class NFCRelayActivity extends Activity {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             Toast.makeText(this, getString(R.string.ndef_discovered), Toast.LENGTH_SHORT).show();
             //TODO
-        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
+        }
+        else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
             Toast.makeText(this, getString(R.string.tech_discovered), Toast.LENGTH_SHORT).show();
             //TODO
-        } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+        }
+        else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Toast.makeText(this, getString(R.string.tag_discovered), Toast.LENGTH_SHORT).show();
             text = getTagInfo(intent);
         }
@@ -253,13 +258,15 @@ public class NFCRelayActivity extends Activity {
                 msgs[i] = (NdefMessage) extraNdefMsg[i];
                 text += msgs[i].toString() + ", ";
             }
-        } else
+        }
+        else
             text += "null";
 
         text += "\nExtra ID: ";
         if (extraID != null) {
             text += TextHelper.byteArrayToHexString(extraID);
-        } else
+        }
+        else
             text += "null";
 
         text += "\nUID: " + TextHelper.byteArrayToHexString(extraTag.getId()) + "\n";
@@ -365,13 +372,15 @@ public class NFCRelayActivity extends Activity {
                                     log(TextHelper.byteArrayToHexString(ok));
                                     continue;
                                 }
-                            } else if (!line.equals(NFCVars.CLEAR)) {
+                            }
+                            else if (!line.equals(NFCVars.CLEAR)) {
                                 log(getString(R.string.unexpected_response));
                                 updateUI(getString(R.string.unexpected_response));
                                 continue;
                             }
                             log("clear!");
-                        } else continue; //unsupported
+                        }
+                        else continue; //unsupported
 
 
                         try {
@@ -432,7 +441,8 @@ public class NFCRelayActivity extends Activity {
                             if (e.getCause() instanceof IllegalBlockSizeException) {
                                 updateUI(getString(R.string.crypto_error));
                                 log(getString(R.string.crypto_error));
-                            } else {
+                            }
+                            else {
                                 updateUI(getString(R.string.lost_tag));
                                 if (mTagTech != null) {
                                     try {
@@ -458,7 +468,8 @@ public class NFCRelayActivity extends Activity {
                             }
                         }
                         log("done reading...");
-                    } else {
+                    }
+                    else {
                         if (mTagTech == null) {
                             updateUI(getString(R.string.nfcproxy_connected_no_tag));
                             log("Closed connection to NFCRelay. mTagTech null");
@@ -474,7 +485,8 @@ public class NFCRelayActivity extends Activity {
                                     log(e2);
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             log("clientSocket null?");
                         }
                     }

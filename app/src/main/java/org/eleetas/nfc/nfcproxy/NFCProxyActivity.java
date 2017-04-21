@@ -208,11 +208,13 @@ public class NFCProxyActivity extends Activity {
             mOptionsMenu.getItem(0).setVisible(false);
             mOptionsMenu.getItem(1).setVisible(false);
             mOptionsMenu.getItem(2).setVisible(false);
-        } else if (mMode == REPLAY_PCD_MODE) {
+        }
+        else if (mMode == REPLAY_PCD_MODE) {
             mOptionsMenu.getItem(0).setVisible(false);
             mOptionsMenu.getItem(1).setVisible(true);
             mOptionsMenu.getItem(2).setVisible(true);
-        } else if (mMode == REPLAY_TAG_MODE) {
+        }
+        else if (mMode == REPLAY_TAG_MODE) {
             mOptionsMenu.getItem(0).setVisible(true);
             mOptionsMenu.getItem(1).setVisible(false);
             mOptionsMenu.getItem(2).setVisible(true);
@@ -226,7 +228,8 @@ public class NFCProxyActivity extends Activity {
             case R.id.settingsButton:
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                     Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else {
                     startActivity(new Intent(this, SettingsActivity.class));
                 }
                 return true;
@@ -311,7 +314,8 @@ public class NFCProxyActivity extends Activity {
                             enablePCDReplay();
                         }
                     });
-                } else if (type == DBHelper.REPLAY_TAG) {
+                }
+                else if (type == DBHelper.REPLAY_TAG) {
                     saveView.append(getString(R.string.type_tag));
                     saveView.setOnClickListener(new OnClickListener() {
                         @Override
@@ -384,7 +388,8 @@ public class NFCProxyActivity extends Activity {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 prefs.edit().putBoolean("relayPref", true).commit();
                 Toast.makeText(this, getString(R.string.pcd_na_switch), Toast.LENGTH_LONG).show();
-            } else {
+            }
+            else {
                 Toast.makeText(this, getString(R.string.pcd_na_unpredict), Toast.LENGTH_LONG).show();
             }
         }
@@ -428,7 +433,8 @@ public class NFCProxyActivity extends Activity {
             if (mMode == REPLAY_PCD_MODE) {
                 log("pcd mode");
                 doReplayPCD(extraTag, mReplaySession.getBundle("requests"), mReplaySession.getBundle("responses"));
-            } else {
+            }
+            else {
                 boolean isPCD = false;
                 String[] tech = extraTag.getTechList();
                 for (String s : tech) {
@@ -436,7 +442,8 @@ public class NFCProxyActivity extends Activity {
                     if (s.equals(NFCVars.ISO_PCDA_CLASS)) {
                         isPCD = true;
                         break;
-                    } else if (s.equals(NFCVars.ISO_PCDB_CLASS)) {
+                    }
+                    else if (s.equals(NFCVars.ISO_PCDB_CLASS)) {
                         Toast.makeText(this, getString(R.string.report_pcdb), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -446,15 +453,18 @@ public class NFCProxyActivity extends Activity {
                     if (mMode == REPLAY_TAG_MODE) {
                         log("tag mode");
                         doReplayTag(extraTag, mReplaySession.getBundle("responses"), mReplaySession.getBundle("requests"));
-                    } else {
+                    }
+                    else {
                         log("proxy mode");
                         new ProxyTask().execute(extraTag);
                     }
-                } else {
+                }
+                else {
                     log("no PCD tag");
                 }
             }
-        } else {
+        }
+        else {
             log("no extratag");
         }
         log("onResume end");
@@ -603,7 +613,8 @@ public class NFCProxyActivity extends Activity {
                     responses.putByteArray(String.valueOf(i + 1), reply);
                     if (mMask && reply != null && reply[0] == 0x70) {
                         msg = new SpannableString(tagStr + getString(R.string.masked));
-                    } else {
+                    }
+                    else {
                         msg = new SpannableString(tagStr + TextHelper.byteArrayToHexString(reply));
                     }
                     msg.setSpan(new UnderlineSpan(), 0, 4, 0);
@@ -614,7 +625,8 @@ public class NFCProxyActivity extends Activity {
                             if (Arrays.equals(reply, tagTransactions.getByteArray(String.valueOf(i + 1)))) {
                                 log(getString(R.string.equal));
                                 updateStatus(getString(R.string.equal));
-                            } else {
+                            }
+                            else {
                                 log(getString(R.string.not_equal));
                                 log("org: " + TextHelper.byteArrayToHexString(tagTransactions.getByteArray(String.valueOf(i + 1))));
                                 log("new : " + TextHelper.byteArrayToHexString(reply));
@@ -622,7 +634,8 @@ public class NFCProxyActivity extends Activity {
                                 updateStatus("org: " + TextHelper.byteArrayToHexString(tagTransactions.getByteArray(String.valueOf(i + 1))));
                                 updateStatus("new : " + TextHelper.byteArrayToHexString(reply));
                             }
-                        } else {
+                        }
+                        else {
                             log("index to responses out of bounds");
                             updateStatus(getString(R.string.index_out_bounds));
                         }
@@ -635,7 +648,8 @@ public class NFCProxyActivity extends Activity {
                             log(getString(R.string.finished_reading));
                             updateStatus(getString(R.string.finished_reading));
                         }
-                    } else if (reply != null && reply.length > 3 && reply[0] == 0x77 && reply[2] == (byte) 0x9f) {
+                    }
+                    else if (reply != null && reply.length > 3 && reply[0] == 0x77 && reply[2] == (byte) 0x9f) {
                         updateData("\n" + TagHelper.parseCryptogram(reply, tmp)); //previous pcdRequest
                         log(getString(R.string.finished_reading));
                         updateStatus(getString(R.string.finished_reading));
@@ -643,7 +657,8 @@ public class NFCProxyActivity extends Activity {
 
                 }
 
-            } else {
+            }
+            else {
                 log(getString(R.string.unsupported_tag));
                 updateStatus(getString(R.string.unsupported_tag));
             }
@@ -686,7 +701,8 @@ public class NFCProxyActivity extends Activity {
                 log("Not connected to PCD");
                 //updateStatus("Not connected to PCD");
                 //return;
-            } else {
+            }
+            else {
                 meth = cls.getMethod("transceive", new Class[]{byte[].class});
                 String tagStr = getString(R.string.tag) + ": ";
                 String pcdStr = getString(R.string.pcd) + ": ";
@@ -696,7 +712,8 @@ public class NFCProxyActivity extends Activity {
                     SpannableString msg;
                     if (mMask && tmp != null && tmp[0] == 0x70) {
                         msg = new SpannableString(tagStr + getString(R.string.masked));
-                    } else {
+                    }
+                    else {
                         msg = new SpannableString(tagStr + TextHelper.byteArrayToHexString(tmp));
                     }
 
@@ -714,7 +731,8 @@ public class NFCProxyActivity extends Activity {
                             if (Arrays.equals(reply, pcdRequests.getByteArray(String.valueOf(i)))) {
                                 log(getString(R.string.equal));
                                 updateStatus(getString(R.string.equal));
-                            } else {
+                            }
+                            else {
                                 log(getString(R.string.not_equal));
                                 log("org: " + TextHelper.byteArrayToHexString(pcdRequests.getByteArray(String.valueOf(i))));
                                 log("new : " + TextHelper.byteArrayToHexString(reply));
@@ -735,7 +753,8 @@ public class NFCProxyActivity extends Activity {
                                     }
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             log("index to requests out of bounds");
                             updateStatus("index to requests out of bounds");
                         }
@@ -748,7 +767,8 @@ public class NFCProxyActivity extends Activity {
                 log("transaction complete");
                 updateStatus("transaction complete");
                 return;
-            } else {
+            }
+            else {
                 log(e);
             }
         } catch (Exception e) { //TODO:
@@ -812,7 +832,8 @@ public class NFCProxyActivity extends Activity {
                         updateStatusUI(getString(R.string.nfcrelay_not_ready));
                         log(getString(R.string.nfcrelay_not_ready));
                         return null;
-                    } else if (!line.equals(NFCVars.OPTIONS)) {
+                    }
+                    else if (!line.equals(NFCVars.OPTIONS)) {
                         updateStatusUI(getString(R.string.unknown_command));
                         log(getString(R.string.unknown_command));
                         return null;
@@ -831,7 +852,8 @@ public class NFCProxyActivity extends Activity {
                             log(getString(R.string.unexpected_response_encrypting));
                             log(TextHelper.byteArrayToHexString(verify));
                             return null;
-                        } else if (!new String(verify, "UTF-8").equals(NFCVars.VERIFY)) {
+                        }
+                        else if (!new String(verify, "UTF-8").equals(NFCVars.VERIFY)) {
                             updateStatusUI(getString(R.string.bad_password));
                             log(getString(R.string.bad_password));
                             log(TextHelper.byteArrayToHexString(verify));
@@ -840,7 +862,8 @@ public class NFCProxyActivity extends Activity {
                         }
                         IOUtils.sendSocket(NFCVars.OK.getBytes("UTF-8"), clientOS, mSecret, mEncrypt);
 
-                    } else {
+                    }
+                    else {
                         IOUtils.sendSocket((NFCVars.CLEAR + "\n").getBytes("UTF-8"), clientOS, null, false);
                     }
 
@@ -926,7 +949,8 @@ public class NFCProxyActivity extends Activity {
                                     log(getString(R.string.relay_lost_tag));
                                     break;
                                 }
-                            } else {
+                            }
+                            else {
                                 updateStatusUI(getString(R.string.bad_crypto));
                                 log(getString(R.string.bad_crypto));
                                 break;
@@ -939,7 +963,8 @@ public class NFCProxyActivity extends Activity {
                             log("sending card response to PCD");
                             if (mMask && cardResponse[0] == 0x70) {
                                 msg = new SpannableString(tagStr + getString(R.string.masked));
-                            } else {
+                            }
+                            else {
                                 msg = new SpannableString(tagStr + TextHelper.byteArrayToHexString(cardResponse));
                             }
 
@@ -954,7 +979,8 @@ public class NFCProxyActivity extends Activity {
                                         //update UI only after sending cardResponse to PCD
                                         if (cardResponse[0] == 0x70) {
                                             updateDataUI("\n" + TagHelper.parseCC(cardResponse, requests.getByteArray(String.valueOf(requests.size() - 2)), mMask));
-                                        } else if (cardResponse.length > 3 && cardResponse[0] == 0x77 && cardResponse[2] == (byte) 0x9f) {
+                                        }
+                                        else if (cardResponse.length > 3 && cardResponse[0] == 0x77 && cardResponse[2] == (byte) 0x9f) {
                                             updateDataUI("\n" + TagHelper.parseCryptogram(cardResponse, pcdRequest)); //previous pcdRequest
                                         }
                                         updateDataUI(getString(R.string.time) + ": " + (System.currentTimeMillis() - startTime));
@@ -967,7 +993,8 @@ public class NFCProxyActivity extends Activity {
                                 if (cardResponse[0] == 0x70) {
                                     updateDataUI("\n" + TagHelper.parseCC(cardResponse, requests.getByteArray(String.valueOf(requests.size() - 2)), mMask) + "\n");
                                 }
-                            } else {
+                            }
+                            else {
                                 pcdRequest = (byte[]) meth.invoke(ipcd, cardResponse);
                             }
                             requests.putByteArray(String.valueOf(requests.size()), pcdRequest);
@@ -991,7 +1018,8 @@ public class NFCProxyActivity extends Activity {
                                 log(getString(R.string.lost_pcd));
                                 updateStatusUI(getString(R.string.lost_pcd) + " " + e.getMessage());
                             }
-                        } else {
+                        }
+                        else {
                             log(e);
                             updateStatusUI("InvocationTargetException");
                         }
@@ -1030,7 +1058,8 @@ public class NFCProxyActivity extends Activity {
 
                 if (mDataView == null) {
                     log("mDataView null"); //??? happens on quick reads? activity is recreated with
-                } else {
+                }
+                else {
                     //Finish
                     storeTransactionsAndBreak(requests, responses);
                 }
@@ -1111,7 +1140,8 @@ public class NFCProxyActivity extends Activity {
         Bundle transactions = null;
         if (type == DBHelper.REPLAY_PCD) {
             transactions = mReplaySession.getBundle("requests");
-        } else { //if (type == DBHelper.REPLAY_TAG) {
+        }
+        else { //if (type == DBHelper.REPLAY_TAG) {
             transactions = mReplaySession.getBundle("responses");
         }
         byte[][] data = new byte[transactions.size()][];
@@ -1124,7 +1154,8 @@ public class NFCProxyActivity extends Activity {
             //TODO: should be done in new thread
             ((CursorAdapter) mSavedList.getAdapter()).swapCursor(mDBHelper.getReplays());
             Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
-        } else {
+        }
+        else {
             Toast.makeText(this, "Not saved. Duplicate name.", Toast.LENGTH_LONG).show();
         }
     }
@@ -1185,7 +1216,8 @@ public class NFCProxyActivity extends Activity {
                 Toast.makeText(this, "Saved to:\n" + exportFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
                 return;
 
-            } else {
+            }
+            else {
                 Toast.makeText(this, "Error writing to external storage", Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
@@ -1243,7 +1275,8 @@ public class NFCProxyActivity extends Activity {
         for (int i = id; i < size; i++) {
             if (i == id) {
                 mSessions.remove(String.valueOf(id));
-            } else {
+            }
+            else {
                 Bundle b = mSessions.getBundle(String.valueOf(i));
                 mSessions.remove(String.valueOf(i));
                 mSessions.putBundle(String.valueOf(i - 1), b);    //i will always be > 0
@@ -1308,11 +1341,13 @@ public class NFCProxyActivity extends Activity {
             mOptionsMenu.getItem(0).setVisible(false);
             mOptionsMenu.getItem(1).setVisible(false);
             mOptionsMenu.getItem(2).setVisible(false);
-        } else if (mOptionsMenu != null && mMode == REPLAY_PCD_MODE) {
+        }
+        else if (mOptionsMenu != null && mMode == REPLAY_PCD_MODE) {
             mOptionsMenu.getItem(0).setVisible(false);
             mOptionsMenu.getItem(1).setVisible(true);
             mOptionsMenu.getItem(2).setVisible(true);
-        } else if (mOptionsMenu != null && mMode == REPLAY_TAG_MODE) {
+        }
+        else if (mOptionsMenu != null && mMode == REPLAY_TAG_MODE) {
             mOptionsMenu.getItem(0).setVisible(true);
             mOptionsMenu.getItem(1).setVisible(false);
             mOptionsMenu.getItem(2).setVisible(true);

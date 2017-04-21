@@ -37,10 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     private long saveTransactions(SQLiteDatabase db, String name, byte[][] transactions, int type, int builtIn) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
