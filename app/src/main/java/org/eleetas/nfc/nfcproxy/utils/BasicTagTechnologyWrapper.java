@@ -8,9 +8,10 @@ import android.nfc.Tag;
 import android.nfc.tech.TagTechnology;
 import android.util.Log;
 
-
-//TODO: HACK since BasicTagTechnology is not currently visible from SDK. primiarly want the transceive() method (otherwise we could just use TagTechnology) 
-//TODO: Just access BasicTagTechnolgy directly but modifying platform library android.jar. (use library with hidden classes from framework.jar)
+/**
+ * This class is a hack for the BasicTagTechnology, mainly to provide transceive will maintain
+ * original functionalists provided by TagTechnology
+ */
 public class BasicTagTechnologyWrapper implements TagTechnology {
     // TAG for log
     private static final String TAG = "BasicTagTech";

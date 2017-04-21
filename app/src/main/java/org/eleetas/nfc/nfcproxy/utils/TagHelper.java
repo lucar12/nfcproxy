@@ -5,12 +5,9 @@ import java.util.Arrays;
 import java.util.Formatter;
 
 public class TagHelper {
-
     //All of this is extremely ugly and just wrong.
     //TODO: rewrite this to actually parse the data instead of this incredibly hackish way of hardcoding values
-
     public static String parseCC(byte[] data, byte[] previousPCDRequest, boolean mask) {
-
         try {
             //VISA
             //check if data is an EMV Record Template and Track 2 equivalent data is present
@@ -43,7 +40,7 @@ public class TagHelper {
             else if (data.length > 9 && data[0] == 0x70 && data[8] == 0x56) {
                 //TODO: Length error checking
                 /*
-	    		 * PayPass M/ChipTechnical Specifications (https://docs.google.com/viewer?a=v&q=cache:O0rYe0zxyegJ:read.pudn.com/downloads161/doc/725864/PayPass%2520-%2520MChip%2520(V1.3).pdf+mastercard+mchip+technical+specification&hl=en&gl=us&pid=bl&srcid=ADGEESjl5lr24scpx8am0GSqalJj0iIa7NZNK1_XGsjw0pUqBnhIlCH4ZLu4UcbQKHP3IQxTNDbcWRSeu0sSbShZ7SInM0afHwwO6S5VOgrqvj4l44mO9UeltVVreEfRyCMUM8sLIqWm&sig=AHIEtbTWQac_EGUzlfP4hZiFavpSJnmsCw)
+                 * PayPass M/ChipTechnical Specifications (https://docs.google.com/viewer?a=v&q=cache:O0rYe0zxyegJ:read.pudn.com/downloads161/doc/725864/PayPass%2520-%2520MChip%2520(V1.3).pdf+mastercard+mchip+technical+specification&hl=en&gl=us&pid=bl&srcid=ADGEESjl5lr24scpx8am0GSqalJj0iIa7NZNK1_XGsjw0pUqBnhIlCH4ZLu4UcbQKHP3IQxTNDbcWRSeu0sSbShZ7SInM0afHwwO6S5VOgrqvj4l44mO9UeltVVreEfRyCMUM8sLIqWm&sig=AHIEtbTWQac_EGUzlfP4hZiFavpSJnmsCw)
 	    		 * 
 	    		 * Tag:
 	    		 * ans, variable length up to 76 bytes
@@ -106,12 +103,14 @@ public class TagHelper {
                 if (previousPCDRequest != null && previousPCDRequest.length > 8) {
 
                     sb.append(format.format("%1x%1x%1x%02x%01x%02x", rand1, rand2, rand3, counter1, counter2, previousPCDRequest[7]).toString());
-                } else {
+                }
+                else {
                     sb.append(format.format("%1x%1x%1x%02x%01xXX", rand1, rand2, rand3, counter1, counter2).toString());
                 }
 
                 return sb.toString();
-            } else {
+            }
+            else {
                 return "Unsupported CC format (replay should still be OK)";
             }
         } catch (Exception e) {
@@ -134,7 +133,8 @@ public class TagHelper {
                 Formatter format = new Formatter();
                 ccnum += format.format("%02x", track2[offset + i]).toString();
             }
-        } else {
+        }
+        else {
             ccnum = "XXXXXXXXXXXXXXXX";
         }
         sb.append(ccnum);
@@ -160,7 +160,8 @@ public class TagHelper {
         if (!mask) {
             //TODO: internationalize...right now mm/yy
             exp += format.format("%1x%1x/%1x%1x", monthTens, monthOnes, yearTens, yearOnes).toString();
-        } else {
+        }
+        else {
             exp = "XX/XX";
         }
         sb.append(exp);
@@ -191,7 +192,8 @@ public class TagHelper {
 
         if (dIndex != -1) {
             name = new String(track1, nameOffset, dIndex - nameOffset); //add "UTF-8"?
-        } else {
+        }
+        else {
             name = "(No name)";
         }
         sb.append(name.trim());
@@ -200,7 +202,8 @@ public class TagHelper {
         String ccnum = "";
         if (!mask) {
             ccnum = new String(track1, offset, PANLength);
-        } else {
+        }
+        else {
             ccnum = "XXXXXXXXXXXXXXXX";
         }
         sb.append(ccnum);
@@ -212,7 +215,8 @@ public class TagHelper {
             String mo = new String(track1, expOffset + 2, 2);
             //TODO: internationalize...right now mm/yy
             exp = mo + "/" + yr;
-        } else {
+        }
+        else {
             exp = "XX/XX";
         }
         sb.append(exp);
@@ -269,9 +273,9 @@ public class TagHelper {
         sb.append("UDOL: ").append(TextHelper.byteArrayToHexString(udol)).append("\n");
         sb.append("Counter: ").append(TextHelper.byteArrayToHexString(counter));
         return sb.toString();
-    	
+
 /*    	
-		0x77 0x0f
+        0x77 0x0f
     	0x9f 0x61 0x02 0x7f 0x48
     	0x9f 0x60 0x02 0x0e 0xb7
     	0x9f 0x36 0x02 0x00 0x12
